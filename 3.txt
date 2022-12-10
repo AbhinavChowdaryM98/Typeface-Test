@@ -1,0 +1,29 @@
+User:
+    User ID  Int
+    Encoded User Address String
+
+
+API:
+    API Name String
+    API Operation String
+
+Usage:
+    User ID                     Int
+    API Name                    String
+    API Operation               String
+    Request Time                Time
+    Output Data                 String
+    Acknowledgement Data        String
+    Acknowledgement Time stamp  Time
+
+1. SELECT API Name, API Operation
+FROM Usage
+GROUP BY API Name, API Operation
+HAVING (Acknowledgement Time stamp - Request Time) == MAX(AVG(Acknowledgement Time stamp - Request Time))
+
+2. SELECT API Name, API Operation
+FROM Usage
+GROUP BY User ID
+HAVING (Acknowledgement Time stamp - Request Time) == MAX(AVG(Acknowledgement Time stamp - Request Time))
+
+3. SELECT a.API_Name, a.API_Operation,  a.hrs, AVG(a.percent) FROM  (SELECT API Name, API Operation,  EXTRACT HOUR FROM Request Time AS hrs, (ABS(Acknowledgement Data- Output Data)/Output Data)*100) as percent FROM Usage AS a) GROUP BY API_Name, API_Operation, hrs
